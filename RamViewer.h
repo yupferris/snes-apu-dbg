@@ -24,6 +24,8 @@ private:
     Ui::RamViewer *ui;
 
     SnesApu *apu;
+
+    QRgb *pixels;
 };
 
 #endif // RAMVIEWER_H

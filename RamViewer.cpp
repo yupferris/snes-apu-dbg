@@ -13,6 +13,10 @@ RamViewer::RamViewer(SnesApu *apu, QWidget *parent) :
 
     this->apu = apu;
 
+    pixels = new QRgb[256 * 256];
+    for (int i = 0; i < 256 * 256; i++)
+        pixels[i] = 0;
+
     auto updateTimer = new QTimer(this);
     connect(updateTimer, &QTimer::timeout, [=] ()
     {
@@ -24,6 +28,8 @@ RamViewer::RamViewer(SnesApu *apu, QWidget *parent) :
 RamViewer::~RamViewer()
 {
     delete ui;
+
+    delete [] pixels;
 }
 
 void RamViewer::paintEvent(QPaintEvent *event)
@@ -33,13 +39,27 @@ void RamViewer::paintEvent(QPaintEvent *event)
     auto snapshot = apu->GetRamSnapshot();
     auto data = snapshot.GetData();
 
-    auto pixels = new QRgb[256 * 256];
     for (int y = 0; y < 256; y++)
     {
         for (int x = 0; x < 256; x++)
         {
-            auto c = data[y * 256 + x];
-            pixels[(255 - y) * 256 + x] = qRgba(c, c, c, 255);
+            int dataIndex = y * 256 + x;
+            int pixelIndex = (255 - y) * 256 + x;
+            auto oldPixel = pixels[pixelIndex];
+            auto oldData = qBlue(oldPixel);
+            auto newData = data[dataIndex];
+            int red = qRed(oldPixel);
+            if (newData != oldData)
+            {
+                red = 255;
+            }
+            else if (red > 0)
+            {
+                red -= 20;
+                if (red < 0)
+                    red = 0;
+            }
+            pixels[pixelIndex] = qRgba(red, 0, newData, 255);
         }
     }
 
