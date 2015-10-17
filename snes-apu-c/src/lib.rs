@@ -5,7 +5,6 @@ extern crate spc;
 extern crate snes_apu;
 
 use libc::c_void;
-use std::mem::transmute;
 
 use emu::audio_driver::AudioDriver;
 use emu::core_audio_driver::CoreAudioDriver;
@@ -44,10 +43,10 @@ impl Context {
 
 #[no_mangle]
 pub extern fn create_context() -> *mut c_void {
-    unsafe { transmute(Box::new(Context::new())) }
+    Box::into_raw(Box::new(Context::new())) as *mut c_void
 }
 
 #[no_mangle]
 pub extern fn free_context(context: *mut c_void) {
-    let _: Box<Context> = unsafe { transmute(context) };
+    unsafe { Box::from_raw(context as *mut Context) };
 }

@@ -5,8 +5,6 @@ typedef void SnesApuContext;
 
 extern "C"
 {
-    unsigned long add(unsigned long, unsigned long);
-
     SnesApuContext *create_context();
     void free_context(SnesApuContext *);
 }
