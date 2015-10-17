@@ -9,6 +9,8 @@ public:
     SnesApu();
     ~SnesApu();
 
+    void SetSong(const char*);
+
 private:
     SnesApuContext *context;
 };

@@ -3,8 +3,10 @@
 
 #include <QMainWindow>
 
+#include "SnesApu.hpp"
+
 namespace Ui {
-class MainWindow;
+    class MainWindow;
 }
 
 class MainWindow : public QMainWindow
@@ -15,8 +17,14 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+private slots:
+    void on_songAButton_clicked();
+    void on_songBButton_clicked();
+
 private:
     Ui::MainWindow *ui;
+
+    SnesApu apu;
 };
 
-#endif // MAINWINDOW_H
+#endif

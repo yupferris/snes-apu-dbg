@@ -7,6 +7,8 @@ extern "C"
 {
     SnesApuContext *create_context();
     void free_context(SnesApuContext *);
+
+    void set_song(SnesApuContext *, const char *);
 }
 
 #endif
