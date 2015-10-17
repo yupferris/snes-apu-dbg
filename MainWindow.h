@@ -23,6 +23,7 @@ public:
 private slots:
     void on_songAButton_clicked();
     void on_songBButton_clicked();
+    void on_songCButton_clicked();
 
     void on_stopButton_clicked();
 

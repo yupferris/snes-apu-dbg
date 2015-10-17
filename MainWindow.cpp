@@ -27,6 +27,11 @@ void MainWindow::on_songBButton_clicked()
     apu.SetSong("/Users/yupferris/dev/projects/emu/snes-apu/test/ferris-nu.spc");
 }
 
+void MainWindow::on_songCButton_clicked()
+{
+    apu.SetSong("/Users/yupferris/dev/projects/emu/snes-apu/test/smashit.spc");
+}
+
 void MainWindow::on_stopButton_clicked()
 {
     apu.SetSong(nullptr);
