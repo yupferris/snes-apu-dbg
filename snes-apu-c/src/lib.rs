@@ -12,7 +12,7 @@ use libc::{c_void, c_char};
 use emu::audio_driver::AudioDriver;
 use emu::core_audio_driver::CoreAudioDriver;
 
-use spc::spc::Spc;
+use spc::spc::{Spc, RAM_LEN};
 use snes_apu::apu::{Apu, BUFFER_LEN};
 
 struct ContextState {
@@ -60,6 +60,10 @@ impl Context {
         }
         state.spc = spc;
     }
+
+    fn get_ram_snapshot(&mut self) -> Box<[u8; RAM_LEN]> {
+        self.state.lock().unwrap().apu.get_ram_snapshot()
+    }
 }
 
 #[no_mangle]
@@ -82,4 +86,16 @@ pub extern fn set_song(context: *mut c_void, filename: *const c_char) {
         Some(Spc::load(filename).unwrap())
     };
     context.set_song(spc);
+}
+
+#[no_mangle]
+pub extern fn get_ram_snapshot(context: *mut c_void) -> *mut u8 {
+    let context = unsafe { &mut *(context as *mut Context) };
+    let snapshot = context.get_ram_snapshot();
+    Box::into_raw(snapshot) as *mut u8
+}
+
+#[no_mangle]
+pub extern fn free_ram_snapshot(snapshot: *mut c_void) {
+    unsafe { Box::from_raw(snapshot as *mut [u8; RAM_LEN]) };
 }

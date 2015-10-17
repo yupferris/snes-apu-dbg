@@ -2,8 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <qlayout.h>
 
-#include "SnesApu.hpp"
+#include "RamViewer.h"
+
+#include "SnesApu.h"
 
 namespace Ui {
     class MainWindow;
@@ -25,6 +28,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    RamViewer *ramViewer;
 
     SnesApu apu;
 };

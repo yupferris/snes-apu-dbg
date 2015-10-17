@@ -9,6 +9,9 @@ extern "C"
     void free_context(SnesApuContext *);
 
     void set_song(SnesApuContext *, const char *);
+
+    const unsigned char *get_ram_snapshot(SnesApuContext *);
+    void free_ram_snapshot(const unsigned char *);
 }
 
 #endif

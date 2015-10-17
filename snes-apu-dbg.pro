@@ -16,12 +16,16 @@ MOC_DIR = $${DESTDIR}/.moc
 RCC_DIR = $${DESTDIR}/.rcc
 UI_DIR = $${DESTDIR}/.ui
 
+CONFIG += c++11
 LIBS += -Lsnes-apu-c/target/release -lsnes_apu_c -framework AudioUnit
 
-FORMS += MainWindow.ui
-SOURCES += main.cpp\
-           SnesApu.cpp\
-           MainWindow.cpp
-HEADERS += snes_apu_c.h\
-           SnesApu.hpp\
-           MainWindow.h
+FORMS += MainWindow.ui \
+    RamViewer.ui
+SOURCES += main.cpp \
+    SnesApu.cpp \
+    MainWindow.cpp \
+    RamViewer.cpp
+HEADERS += snes_apu_c.h \
+    SnesApu.h \
+    MainWindow.h \
+    RamViewer.h

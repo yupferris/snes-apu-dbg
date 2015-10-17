@@ -1,11 +1,15 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
+#include <qlayout.h>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow())
 {
     ui->setupUi(this);
+
+    ramViewer = new RamViewer(&apu, ui->ramViewerContainer);
 }
 
 MainWindow::~MainWindow()
@@ -25,5 +29,5 @@ void MainWindow::on_songBButton_clicked()
 
 void MainWindow::on_stopButton_clicked()
 {
-    apu.SetSong(0); // TODO: C++11
+    apu.SetSong(nullptr);
 }
