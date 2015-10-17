@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>Chrono Trigger</string>
     </property>
    </widget>
    <widget class="QPushButton" name="songBButton">
@@ -37,7 +37,20 @@
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>Elix - Nu</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="stopButton">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>10</y>
+      <width>115</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Stop</string>
     </property>
    </widget>
   </widget>

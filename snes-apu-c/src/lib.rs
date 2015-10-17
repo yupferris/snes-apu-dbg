@@ -52,11 +52,13 @@ impl Context {
         }
     }
 
-    fn set_song(&mut self, spc: Spc) {
+    fn set_song(&mut self, spc: Option<Spc>) {
         let state = &mut self.state.lock().unwrap();
         state.apu.reset();
-        state.apu.set_state(&spc);
-        state.spc = Some(spc);
+        if let Some(ref spc) = spc {
+            state.apu.set_state(&spc);
+        }
+        state.spc = spc;
     }
 }
 
@@ -73,7 +75,11 @@ pub extern fn free_context(context: *mut c_void) {
 #[no_mangle]
 pub extern fn set_song(context: *mut c_void, filename: *const c_char) {
     let context = unsafe { &mut *(context as *mut Context) };
-    let filename = unsafe { CStr::from_ptr(filename) }.to_str().unwrap();
-    let spc = Spc::load(filename).unwrap();
+    let spc = if filename.is_null() {
+        None
+    } else {
+        let filename = unsafe { CStr::from_ptr(filename) }.to_str().unwrap();
+        Some(Spc::load(filename).unwrap())
+    };
     context.set_song(spc);
 }

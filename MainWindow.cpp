@@ -22,3 +22,8 @@ void MainWindow::on_songBButton_clicked()
 {
     apu.SetSong("/Users/yupferris/dev/projects/emu/snes-apu/test/ferris-nu.spc");
 }
+
+void MainWindow::on_stopButton_clicked()
+{
+    apu.SetSong(0); // TODO: C++11
+}
