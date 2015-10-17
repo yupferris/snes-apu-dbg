@@ -1,5 +1,5 @@
-#ifndef RAMVIEWER_H
-#define RAMVIEWER_H
+#ifndef __RAM_VIEWER_H__
+#define __RAM_VIEWER_H__
 
 #include <QWidget>
 
@@ -14,7 +14,7 @@ class RamViewer : public QWidget
     Q_OBJECT
 
 public:
-    explicit RamViewer(SnesApu *apu, QWidget *parent = 0);
+    explicit RamViewer(SnesApu *apu, QWidget *parent = nullptr);
     ~RamViewer();
 
 protected:
@@ -28,4 +28,4 @@ private:
     QRgb *pixels;
 };
 
-#endif // RAMVIEWER_H
+#endif
