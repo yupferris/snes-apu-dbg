@@ -30,9 +30,6 @@ void RamViewer::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
 
-    //painter.setBrush(QColor("#000"));
-    //painter.drawRect(0, 0, width(), height());
-
     auto snapshot = apu->GetRamSnapshot();
     auto data = snapshot.GetData();
 
@@ -46,5 +43,5 @@ void RamViewer::paintEvent(QPaintEvent *event)
         }
     }
 
-    painter.drawImage(QPoint(0, 0), QImage((unsigned char *)pixels, 256, 256, 256 * sizeof(QRgb), QImage::Format_ARGB32));
+    painter.drawImage(QRect(0, 0, 512, 512), QImage((unsigned char *)pixels, 256, 256, 256 * sizeof(QRgb), QImage::Format_ARGB32));
 }
