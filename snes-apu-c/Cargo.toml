@@ -1,0 +1,14 @@
+[package]
+name = "snes-apu-c"
+version = "0.1.0"
+authors = ["ferris <jake@fusetools.com>"]
+
+[lib]
+name = "snes_apu_c"
+crate-type = ["staticlib"]
+
+[dependencies]
+libc = "0.1.10"
+spc = "0.1.1"
+emu = "0.1.0"
+snes-apu = "0.1.3"
