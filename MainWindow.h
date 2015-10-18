@@ -21,9 +21,7 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_songAButton_clicked();
-    void on_songBButton_clicked();
-    void on_songCButton_clicked();
+    void on_fileOpenSpcFile_triggered(bool checked = false);
 
     void on_stopButton_clicked();
 

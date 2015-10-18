@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>649</width>
+    <width>653</width>
     <height>532</height>
    </rect>
   </property>
@@ -14,37 +14,11 @@
    <string>snes-apu-dbg</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QPushButton" name="songAButton">
-    <property name="geometry">
-     <rect>
-      <x>530</x>
-      <y>10</y>
-      <width>115</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Chrono Trigger</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="songBButton">
-    <property name="geometry">
-     <rect>
-      <x>530</x>
-      <y>40</y>
-      <width>115</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Elix - Nu</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="stopButton">
     <property name="geometry">
      <rect>
       <x>530</x>
-      <y>100</y>
+      <y>10</y>
       <width>115</width>
       <height>32</height>
      </rect>
@@ -63,20 +37,29 @@
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="songCButton">
-    <property name="geometry">
-     <rect>
-      <x>530</x>
-      <y>70</y>
-      <width>115</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Elix - Smash It</string>
-    </property>
-   </widget>
   </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>653</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_File">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="fileOpenSpcFile"/>
+   </widget>
+   <addaction name="menu_File"/>
+  </widget>
+  <action name="fileOpenSpcFile">
+   <property name="text">
+    <string>&amp;Open SPC File...</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

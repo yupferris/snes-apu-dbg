@@ -2,6 +2,7 @@
 #include "ui_MainWindow.h"
 
 #include <qlayout.h>
+#include <qfiledialog.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -10,6 +11,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     ramViewer = new RamViewer(&apu, ui->ramViewerContainer);
+
+    ui->fileOpenSpcFile->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_O));
 }
 
 MainWindow::~MainWindow()
@@ -17,19 +20,12 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_songAButton_clicked()
+void MainWindow::on_fileOpenSpcFile_triggered(bool checked)
 {
-    apu.SetSong("/Users/yupferris/dev/projects/spc/ct/102 Chrono Trigger.spc");
-}
-
-void MainWindow::on_songBButton_clicked()
-{
-    apu.SetSong("/Users/yupferris/dev/projects/emu/snes-apu/test/ferris-nu.spc");
-}
-
-void MainWindow::on_songCButton_clicked()
-{
-    apu.SetSong("/Users/yupferris/dev/projects/emu/snes-apu/test/smashit.spc");
+    auto filename = QFileDialog::getOpenFileName(this, "Open SPC File", "", "SPC File (*.spc);;All Files (*)").toStdString();
+    if (!filename.size())
+        return;
+    apu.SetSong(filename.c_str());
 }
 
 void MainWindow::on_stopButton_clicked()
