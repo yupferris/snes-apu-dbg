@@ -17,7 +17,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(SnesApu *apu, QWidget *parent = nullptr);
     ~MainWindow();
 
 private slots:
@@ -28,9 +28,9 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    RamViewer *ramViewer;
+    SnesApu *apu;
 
-    SnesApu apu;
+    RamViewer *ramViewer;
 };
 
 #endif

@@ -4,13 +4,15 @@
 #include <qlayout.h>
 #include <qfiledialog.h>
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(SnesApu *apu, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow())
 {
     ui->setupUi(this);
 
-    ramViewer = new RamViewer(&apu, ui->ramViewerContainer);
+    this->apu = apu;
+
+    ramViewer = new RamViewer(apu, ui->ramViewerContainer);
 
     ui->fileOpenSpcFile->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_O));
 }
@@ -25,10 +27,10 @@ void MainWindow::on_fileOpenSpcFile_triggered(bool checked)
     auto filename = QFileDialog::getOpenFileName(this, "Open SPC File", "", "SPC File (*.spc);;All Files (*)").toStdString();
     if (!filename.size())
         return;
-    apu.SetSong(filename.c_str());
+    apu->SetSong(filename.c_str());
 }
 
 void MainWindow::on_stopButton_clicked()
 {
-    apu.SetSong(nullptr);
+    apu->SetSong(nullptr);
 }
