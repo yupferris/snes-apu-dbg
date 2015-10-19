@@ -5,6 +5,7 @@
 #include <qlayout.h>
 
 #include "RamViewer.h"
+#include "VoiceViewer.h"
 
 #include "SnesApu.h"
 
@@ -31,6 +32,7 @@ private:
     SnesApu *apu;
 
     RamViewer *ramViewer;
+    VoiceViewer **voiceViewers;
 };
 
 #endif

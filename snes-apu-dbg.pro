@@ -20,12 +20,15 @@ CONFIG += c++11
 LIBS += -Lsnes-apu-c/target/release -lsnes_apu_c -framework AudioUnit
 
 FORMS += MainWindow.ui \
-    RamViewer.ui
+    RamViewer.ui \
+    VoiceViewer.ui
 SOURCES += main.cpp \
     SnesApu.cpp \
     MainWindow.cpp \
-    RamViewer.cpp
+    RamViewer.cpp \
+    VoiceViewer.cpp
 HEADERS += snes_apu_c.h \
     SnesApu.h \
     MainWindow.h \
-    RamViewer.h
+    RamViewer.h \
+    VoiceViewer.h
