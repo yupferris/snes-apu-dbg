@@ -63,14 +63,20 @@ impl Context {
         state.spc = spc;
     }
 
-    fn get_ram_snapshot(&mut self) -> Box<[u8; RAM_LEN]> {
+    fn get_snapshot(&mut self) -> Snapshot {
         let state = &mut self.state.lock().unwrap();
-        let mut ret = Box::new([0; RAM_LEN]);
+        let mut ram = Box::new([0; RAM_LEN]);
         for i in 0..RAM_LEN {
-            ret[i] = state.apu.read_u8(i as u32);
+            ram[i] = state.apu.read_u8(i as u32);
         }
-        ret
+        Snapshot {
+            ram: ram
+        }
     }
+}
+
+struct Snapshot {
+    ram: Box<[u8; RAM_LEN]>
 }
 
 #[no_mangle]
@@ -79,8 +85,8 @@ pub extern fn create_context() -> *mut c_void {
 }
 
 #[no_mangle]
-pub extern fn free_context(context: *mut c_void) {
-    unsafe { Box::from_raw(context as *mut Context) };
+pub unsafe extern fn free_context(context: *mut c_void) {
+    Box::from_raw(context as *mut Context);
 }
 
 #[no_mangle]
@@ -96,13 +102,19 @@ pub extern fn set_song(context: *mut c_void, filename: *const c_char) {
 }
 
 #[no_mangle]
-pub extern fn get_ram_snapshot(context: *mut c_void) -> *mut u8 {
+pub extern fn get_snapshot(context: *mut c_void) -> *mut c_void {
     let context = unsafe { &mut *(context as *mut Context) };
-    let snapshot = context.get_ram_snapshot();
-    Box::into_raw(snapshot) as *mut u8
+    let snapshot = Box::new(context.get_snapshot());
+    Box::into_raw(snapshot) as *mut c_void
 }
 
 #[no_mangle]
-pub extern fn free_ram_snapshot(snapshot: *mut c_void) {
-    unsafe { Box::from_raw(snapshot as *mut [u8; RAM_LEN]) };
+pub unsafe extern fn free_snapshot(snapshot: *mut c_void) {
+    Box::from_raw(snapshot as *mut [u8; RAM_LEN]);
+}
+
+#[no_mangle]
+pub extern fn get_snapshot_ram(snapshot: *mut c_void) -> *const u8 {
+    let snapshot = unsafe { &mut *(snapshot as *mut Snapshot) };
+    &mut snapshot.ram[0] as *const _
 }

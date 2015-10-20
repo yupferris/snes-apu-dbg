@@ -1,18 +1,18 @@
 #include "SnesApu.h"
 
-RamSnapshot::RamSnapshot(SnesApuContext *context)
+Snapshot::Snapshot(snes_apu_context_t *context)
 {
-    snapshot = get_ram_snapshot(context);
+    snapshot = get_snapshot(context);
 }
 
-RamSnapshot::~RamSnapshot()
+Snapshot::~Snapshot()
 {
-    free_ram_snapshot(snapshot);
+    free_snapshot(snapshot);
 }
 
-const unsigned char *RamSnapshot::GetData() const
+const unsigned char *Snapshot::GetRam() const
 {
-    return snapshot;
+    return get_snapshot_ram(snapshot);
 }
 
 SnesApu::SnesApu()
@@ -30,7 +30,7 @@ void SnesApu::SetSong(const char *filename)
     set_song(context, filename);
 }
 
-RamSnapshot SnesApu::GetRamSnapshot()
+Snapshot SnesApu::GetSnapshot()
 {
-    return RamSnapshot(context);
+    return Snapshot(context);
 }

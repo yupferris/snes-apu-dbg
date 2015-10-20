@@ -3,16 +3,16 @@
 
 #include "snes_apu_c.h"
 
-class RamSnapshot
+class Snapshot
 {
 public:
-    RamSnapshot(SnesApuContext *);
-    ~RamSnapshot();
+    Snapshot(snes_apu_context_t *);
+    ~Snapshot();
 
-    const unsigned char *GetData() const;
+    const unsigned char *GetRam() const;
 
 private:
-    const unsigned char *snapshot;
+    snes_apu_snapshot_t *snapshot;
 };
 
 class SnesApu
@@ -23,10 +23,10 @@ public:
 
     void SetSong(const char*);
 
-    RamSnapshot GetRamSnapshot();
+    Snapshot GetSnapshot();
 
 private:
-    SnesApuContext *context;
+    snes_apu_context_t *context;
 };
 
 #endif

@@ -36,8 +36,8 @@ void RamViewer::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
 
-    auto snapshot = apu->GetRamSnapshot();
-    auto data = snapshot.GetData();
+    auto snapshot = apu->GetSnapshot();
+    auto ram = snapshot.GetRam();
 
     for (int y = 0; y < 256; y++)
     {
@@ -47,7 +47,7 @@ void RamViewer::paintEvent(QPaintEvent *event)
             int pixelIndex = (255 - y) * 256 + x;
             auto oldPixel = pixels[pixelIndex];
             auto oldData = qBlue(oldPixel);
-            auto newData = data[dataIndex];
+            auto newData = ram[dataIndex];
             int red = qRed(oldPixel);
             if (newData != oldData)
             {
