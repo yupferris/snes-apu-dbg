@@ -64,7 +64,12 @@ impl Context {
     }
 
     fn get_ram_snapshot(&mut self) -> Box<[u8; RAM_LEN]> {
-        self.state.lock().unwrap().apu.get_ram_snapshot()
+        let state = &mut self.state.lock().unwrap();
+        let mut ret = Box::new([0; RAM_LEN]);
+        for i in 0..RAM_LEN {
+            ret[i] = state.apu.read_u8(i as u32);
+        }
+        ret
     }
 }
 
