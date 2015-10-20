@@ -13,7 +13,8 @@ use emu::audio_driver::AudioDriver;
 use emu::core_audio_driver::CoreAudioDriver;
 
 use spc::spc::{Spc, RAM_LEN};
-use snes_apu::apu::{Apu, BUFFER_LEN};
+use snes_apu::apu::Apu;
+use snes_apu::dsp::dsp::{SAMPLE_RATE, BUFFER_LEN};
 
 struct ContextState {
     apu: Box<Apu>,
@@ -33,7 +34,7 @@ impl Context {
         }));
 
         let mut driver = CoreAudioDriver::new();
-        driver.set_sample_rate(32000);
+        driver.set_sample_rate(SAMPLE_RATE as i32);
         let render_callback_state = state.clone();
         let mut left = [0; BUFFER_LEN];
         let mut right = [0; BUFFER_LEN];
