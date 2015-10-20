@@ -63,6 +63,16 @@ impl Context {
         state.spc = spc;
     }
 
+    fn set_voice_is_muted(&mut self, voice_index: i32, value: bool) {
+        let state = &mut self.state.lock().unwrap();
+        state.apu.dsp.as_mut().unwrap().voices[voice_index as usize].is_muted = value;
+    }
+
+    fn get_voice_is_muted(&mut self, voice_index: i32) -> bool {
+        let state = &mut self.state.lock().unwrap();
+        state.apu.dsp.as_mut().unwrap().voices[voice_index as usize].is_muted
+    }
+
     fn get_snapshot(&mut self) -> Snapshot {
         let state = &mut self.state.lock().unwrap();
         let mut ram = Box::new([0; RAM_LEN]);
@@ -99,6 +109,18 @@ pub extern fn set_song(context: *mut c_void, filename: *const c_char) {
         Some(Spc::load(filename).unwrap())
     };
     context.set_song(spc);
+}
+
+#[no_mangle]
+pub extern fn set_voice_is_muted(context: *mut c_void, voice_index: i32, value: bool) {
+    let context = unsafe { &mut *(context as *mut Context) };
+    context.set_voice_is_muted(voice_index, value);
+}
+
+#[no_mangle]
+pub extern fn get_voice_is_muted(context: *mut c_void, voice_index: i32) -> bool {
+    let context = unsafe { &mut *(context as *mut Context) };
+    context.get_voice_is_muted(voice_index)
 }
 
 #[no_mangle]

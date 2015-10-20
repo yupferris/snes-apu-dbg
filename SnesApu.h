@@ -22,6 +22,8 @@ public:
     ~SnesApu();
 
     void SetSong(const char*);
+    void SetVoiceIsMuted(int, bool);
+    bool GetVoiceIsMuted(int);
 
     Snapshot GetSnapshot();
 

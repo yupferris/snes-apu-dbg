@@ -30,6 +30,16 @@ void SnesApu::SetSong(const char *filename)
     set_song(context, filename);
 }
 
+void SnesApu::SetVoiceIsMuted(int voiceIndex, bool value)
+{
+    set_voice_is_muted(context, voiceIndex, value ? 1 : 0);
+}
+
+bool SnesApu::GetVoiceIsMuted(int voiceIndex)
+{
+    return get_voice_is_muted(context, voiceIndex) != 0;
+}
+
 Snapshot SnesApu::GetSnapshot()
 {
     return Snapshot(context);
