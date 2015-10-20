@@ -18,7 +18,13 @@ VoiceViewer::~VoiceViewer()
     delete ui;
 }
 
-void VoiceViewer::on_muted_stateChanged(int state) {
+void VoiceViewer::Reset()
+{
+    ui->muted->setCheckState(apu->GetVoiceIsMuted(voiceIndex) ? Qt::Checked : Qt::Unchecked);
+}
+
+void VoiceViewer::on_muted_stateChanged(int state)
+{
     bool is_checked = state == Qt::Checked;
     if (is_checked != apu->GetVoiceIsMuted(voiceIndex))
         apu->SetVoiceIsMuted(voiceIndex, is_checked);

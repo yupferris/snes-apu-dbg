@@ -21,6 +21,8 @@ public:
     explicit MainWindow(SnesApu *apu, QWidget *parent = nullptr);
     ~MainWindow();
 
+    void Reset();
+
 private slots:
     void on_fileOpenSpcFile_triggered(bool checked = false);
 

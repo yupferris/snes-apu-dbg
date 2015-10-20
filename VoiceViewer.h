@@ -16,6 +16,8 @@ public:
     explicit VoiceViewer(SnesApu *apu, int voiceIndex, QWidget *parent = nullptr);
     ~VoiceViewer();
 
+    void Reset();
+
 private slots:
     void on_muted_stateChanged(int state);
 

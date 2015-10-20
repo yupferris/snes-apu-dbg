@@ -25,6 +25,8 @@ MainWindow::MainWindow(SnesApu *apu, QWidget *parent) :
     voiceViewers[7] = new VoiceViewer(apu, 7, ui->voiceViewer7Container);
 
     ui->fileOpenSpcFile->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_O));
+
+    Reset();
 }
 
 MainWindow::~MainWindow()
@@ -34,15 +36,25 @@ MainWindow::~MainWindow()
     delete [] voiceViewers;
 }
 
+void MainWindow::Reset()
+{
+    for (int i = 0; i < 8; i++)
+    {
+        voiceViewers[i]->Reset();
+    }
+}
+
 void MainWindow::on_fileOpenSpcFile_triggered(bool checked)
 {
     auto filename = QFileDialog::getOpenFileName(this, "Open SPC File", "", "SPC File (*.spc);;All Files (*)").toStdString();
     if (!filename.size())
         return;
     apu->SetSong(filename.c_str());
+    Reset();
 }
 
 void MainWindow::on_stopButton_clicked()
 {
     apu->SetSong(nullptr);
+    Reset();
 }
