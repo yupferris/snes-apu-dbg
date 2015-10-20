@@ -57,6 +57,7 @@ impl Context {
         state.apu.reset();
         if let Some(ref spc) = spc {
             state.apu.set_state(&spc);
+            state.apu.clear_echo_buffer();
         }
         state.spc = spc;
     }
