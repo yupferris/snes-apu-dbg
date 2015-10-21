@@ -15,6 +15,7 @@ use emu::core_audio_driver::CoreAudioDriver;
 use spc::spc::{Spc, RAM_LEN};
 use snes_apu::apu::Apu;
 use snes_apu::dsp::dsp::{SAMPLE_RATE, BUFFER_LEN};
+use snes_apu::dsp::voice::VOICE_BUFFER_LEN;
 
 struct ContextState {
     apu: Box<Apu>,
@@ -90,16 +91,33 @@ impl Snapshot {
             voices: Vec::with_capacity(8)
         };
         for i in 0..8 {
-            ret.voices.push(VoiceSnapshot {
-                is_muted: apu.dsp.as_mut().unwrap().voices[i as usize].is_muted
-            });
+            let voice = &mut apu.dsp.as_mut().unwrap().voices[i as usize];
+            let mut voice_snapshot = VoiceSnapshot {
+                is_muted: voice.is_muted,
+
+                raw_output_buffer: Box::new([0; VOICE_BUFFER_LEN]),
+                left_output_buffer: Box::new([0; VOICE_BUFFER_LEN]),
+                right_output_buffer: Box::new([0; VOICE_BUFFER_LEN]),
+            };
+            for i in 0..VOICE_BUFFER_LEN {
+                let index = ((voice.output_buffer.pos as usize) + i) % VOICE_BUFFER_LEN;
+                let output = voice.output_buffer.buffer[index];
+                voice_snapshot.raw_output_buffer[index] = output.last_voice_out;
+                voice_snapshot.left_output_buffer[index] = output.left_out;
+                voice_snapshot.right_output_buffer[index] = output.right_out;
+            }
+            ret.voices.push(voice_snapshot);
         }
         ret
     }
 }
 
 struct VoiceSnapshot {
-    is_muted: bool
+    is_muted: bool,
+
+    raw_output_buffer: Box<[i32; VOICE_BUFFER_LEN]>,
+    left_output_buffer: Box<[i32; VOICE_BUFFER_LEN]>,
+    right_output_buffer: Box<[i32; VOICE_BUFFER_LEN]>
 }
 
 #[no_mangle]
@@ -159,4 +177,22 @@ pub extern fn get_snapshot_ram(snapshot: *mut c_void) -> *const u8 {
 pub extern fn get_snapshot_voice_is_muted(snapshot: *mut c_void, voice_index: i32) -> i32 {
     let snapshot = unsafe { &mut *(snapshot as *mut Arc<Snapshot>) };
     if snapshot.voices[voice_index as usize].is_muted { 1 } else { 0 }
+}
+
+#[no_mangle]
+pub extern fn get_snapshot_voice_raw_output_buffer(snapshot: *mut c_void, voice_index: i32) -> *const i32 {
+    let snapshot = unsafe { &mut *(snapshot as *mut Arc<Snapshot>) };
+    &snapshot.voices[voice_index as usize].raw_output_buffer[0] as *const _
+}
+
+#[no_mangle]
+pub extern fn get_snapshot_voice_left_output_buffer(snapshot: *mut c_void, voice_index: i32) -> *const i32 {
+    let snapshot = unsafe { &mut *(snapshot as *mut Arc<Snapshot>) };
+    &snapshot.voices[voice_index as usize].left_output_buffer[0] as *const _
+}
+
+#[no_mangle]
+pub extern fn get_snapshot_voice_right_output_buffer(snapshot: *mut c_void, voice_index: i32) -> *const i32 {
+    let snapshot = unsafe { &mut *(snapshot as *mut Arc<Snapshot>) };
+    &snapshot.voices[voice_index as usize].right_output_buffer[0] as *const _
 }

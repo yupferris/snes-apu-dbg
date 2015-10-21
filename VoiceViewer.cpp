@@ -11,6 +11,8 @@ VoiceViewer::VoiceViewer(SnesApu *apu, int voiceIndex, QWidget *parent) :
 
     this->voiceIndex = voiceIndex;
     ui->title->setText("Voice " + QString::number(voiceIndex));
+
+    voiceOutputViewer = new VoiceOutputViewer(voiceIndex, ui->outputViewerContainer);
 }
 
 VoiceViewer::~VoiceViewer()
@@ -23,6 +25,8 @@ void VoiceViewer::Update(Snapshot snapshot)
     auto checkState = snapshot.GetVoiceIsMuted(voiceIndex) ? Qt::Checked : Qt::Unchecked;
     if (checkState != ui->muted->checkState())
         ui->muted->setCheckState(checkState);
+
+    voiceOutputViewer->Update(snapshot);
 }
 
 void VoiceViewer::on_muted_stateChanged(int state)

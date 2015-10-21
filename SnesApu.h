@@ -14,6 +14,9 @@ public:
 
     const unsigned char *GetRam() const;
     bool GetVoiceIsMuted(int) const;
+    const int32_t *GetVoiceRawOutputBuffer(int) const;
+    const int32_t *GetVoiceLeftOutputBuffer(int) const;
+    const int32_t *GetVoiceRightOutputBuffer(int) const;
 
 private:
     snes_apu_snapshot_t *snapshot;

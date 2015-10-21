@@ -2,7 +2,9 @@
 #define __VOICE_VIEWER_H__
 
 #include <QWidget>
+
 #include "SnesApu.h"
+#include "VoiceOutputViewer.h"
 
 namespace Ui {
     class VoiceViewer;
@@ -27,6 +29,8 @@ private:
     SnesApu *apu;
 
     int voiceIndex;
+
+    VoiceOutputViewer *voiceOutputViewer;
 };
 
 #endif

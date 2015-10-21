@@ -34,6 +34,21 @@ bool Snapshot::GetVoiceIsMuted(int voiceIndex) const
     return get_snapshot_voice_is_muted(snapshot, voiceIndex) != 0;
 }
 
+const int32_t *Snapshot::GetVoiceRawOutputBuffer(int voiceIndex) const
+{
+    return get_snapshot_voice_raw_output_buffer(snapshot, voiceIndex);
+}
+
+const int32_t *Snapshot::GetVoiceLeftOutputBuffer(int voiceIndex) const
+{
+    return get_snapshot_voice_left_output_buffer(snapshot, voiceIndex);
+}
+
+const int32_t *Snapshot::GetVoiceRightOutputBuffer(int voiceIndex) const
+{
+    return get_snapshot_voice_right_output_buffer(snapshot, voiceIndex);
+}
+
 SnesApu::SnesApu()
 {
     context = create_context();
