@@ -14,8 +14,10 @@ class RamViewer : public QWidget
     Q_OBJECT
 
 public:
-    explicit RamViewer(SnesApu *apu, QWidget *parent = nullptr);
+    explicit RamViewer(QWidget *parent = nullptr);
     ~RamViewer();
+
+    void Update(Snapshot snapshot);
 
 protected:
     void paintEvent(QPaintEvent *event);
@@ -23,9 +25,9 @@ protected:
 private:
     Ui::RamViewer *ui;
 
-    SnesApu *apu;
-
     QRgb *pixels;
+
+    Snapshot *snapshot;
 };
 
 #endif

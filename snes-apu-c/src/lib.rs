@@ -68,25 +68,38 @@ impl Context {
         state.apu.dsp.as_mut().unwrap().voices[voice_index as usize].is_muted = value;
     }
 
-    fn get_voice_is_muted(&mut self, voice_index: i32) -> bool {
-        let state = &mut self.state.lock().unwrap();
-        state.apu.dsp.as_mut().unwrap().voices[voice_index as usize].is_muted
-    }
-
     fn get_snapshot(&mut self) -> Snapshot {
         let state = &mut self.state.lock().unwrap();
-        let mut ram = Box::new([0; RAM_LEN]);
-        for i in 0..RAM_LEN {
-            ram[i] = state.apu.read_u8(i as u32);
-        }
-        Snapshot {
-            ram: ram
-        }
+        Snapshot::new(&mut state.apu)
     }
 }
 
 struct Snapshot {
-    ram: Box<[u8; RAM_LEN]>
+    ram: Box<[u8; RAM_LEN]>,
+    voices: Vec<VoiceSnapshot>
+}
+
+impl Snapshot {
+    fn new(apu: &mut Apu) -> Snapshot {
+        let mut ram = Box::new([0; RAM_LEN]);
+        for i in 0..RAM_LEN {
+            ram[i] = apu.read_u8(i as u32);
+        }
+        let mut ret = Snapshot {
+            ram: ram,
+            voices: Vec::with_capacity(8)
+        };
+        for i in 0..8 {
+            ret.voices.push(VoiceSnapshot {
+                is_muted: apu.dsp.as_mut().unwrap().voices[i as usize].is_muted
+            });
+        }
+        ret
+    }
+}
+
+struct VoiceSnapshot {
+    is_muted: bool
 }
 
 #[no_mangle]
@@ -112,31 +125,38 @@ pub extern fn set_song(context: *mut c_void, filename: *const c_char) {
 }
 
 #[no_mangle]
-pub extern fn set_voice_is_muted(context: *mut c_void, voice_index: i32, value: bool) {
+pub extern fn set_voice_is_muted(context: *mut c_void, voice_index: i32, value: i32) {
     let context = unsafe { &mut *(context as *mut Context) };
-    context.set_voice_is_muted(voice_index, value);
-}
-
-#[no_mangle]
-pub extern fn get_voice_is_muted(context: *mut c_void, voice_index: i32) -> bool {
-    let context = unsafe { &mut *(context as *mut Context) };
-    context.get_voice_is_muted(voice_index)
+    context.set_voice_is_muted(voice_index, value != 0);
 }
 
 #[no_mangle]
 pub extern fn get_snapshot(context: *mut c_void) -> *mut c_void {
     let context = unsafe { &mut *(context as *mut Context) };
-    let snapshot = Box::new(context.get_snapshot());
+    let snapshot = Box::new(Arc::new(context.get_snapshot()));
     Box::into_raw(snapshot) as *mut c_void
 }
 
 #[no_mangle]
+pub extern fn clone_snapshot(snapshot: *mut c_void) -> *mut c_void {
+    let snapshot = unsafe { &mut *(snapshot as *mut Arc<Snapshot>) };
+    let clone = Box::new(snapshot.clone());
+    Box::into_raw(clone) as *mut c_void
+}
+
+#[no_mangle]
 pub unsafe extern fn free_snapshot(snapshot: *mut c_void) {
-    Box::from_raw(snapshot as *mut [u8; RAM_LEN]);
+    Box::from_raw(snapshot as *mut Arc<Snapshot>);
 }
 
 #[no_mangle]
 pub extern fn get_snapshot_ram(snapshot: *mut c_void) -> *const u8 {
-    let snapshot = unsafe { &mut *(snapshot as *mut Snapshot) };
-    &mut snapshot.ram[0] as *const _
+    let snapshot = unsafe { &mut *(snapshot as *mut Arc<Snapshot>) };
+    &snapshot.ram[0] as *const _
+}
+
+#[no_mangle]
+pub extern fn get_snapshot_voice_is_muted(snapshot: *mut c_void, voice_index: i32) -> i32 {
+    let snapshot = unsafe { &mut *(snapshot as *mut Arc<Snapshot>) };
+    if snapshot.voices[voice_index as usize].is_muted { 1 } else { 0 }
 }

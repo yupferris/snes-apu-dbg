@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>80</width>
-    <height>80</height>
+    <height>130</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -56,6 +56,16 @@
    </property>
    <property name="text">
     <string>Solo</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="outputViewerContainer" native="true">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>80</y>
+     <width>60</width>
+     <height>40</height>
+    </rect>
    </property>
   </widget>
  </widget>

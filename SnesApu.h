@@ -7,9 +7,13 @@ class Snapshot
 {
 public:
     Snapshot(snes_apu_context_t *);
+    Snapshot(const Snapshot&);
     ~Snapshot();
 
+    Snapshot& operator =(const Snapshot&);
+
     const unsigned char *GetRam() const;
+    bool GetVoiceIsMuted(int) const;
 
 private:
     snes_apu_snapshot_t *snapshot;
@@ -23,7 +27,6 @@ public:
 
     void SetSong(const char*);
     void SetVoiceIsMuted(int, bool);
-    bool GetVoiceIsMuted(int);
 
     Snapshot GetSnapshot();
 

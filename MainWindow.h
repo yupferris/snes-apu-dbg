@@ -3,11 +3,12 @@
 
 #include <QMainWindow>
 #include <qlayout.h>
+#include <qtimer.h>
+
+#include "SnesApu.h"
 
 #include "RamViewer.h"
 #include "VoiceViewer.h"
-
-#include "SnesApu.h"
 
 namespace Ui {
     class MainWindow;
@@ -21,7 +22,7 @@ public:
     explicit MainWindow(SnesApu *apu, QWidget *parent = nullptr);
     ~MainWindow();
 
-    void Reset();
+    void Update(Snapshot snapshot);
 
 private slots:
     void on_fileOpenSpcFile_triggered(bool checked = false);

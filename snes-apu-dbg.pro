@@ -21,14 +21,17 @@ LIBS += -Lsnes-apu-c/target/release -lsnes_apu_c -framework AudioUnit
 
 FORMS += MainWindow.ui \
     RamViewer.ui \
-    VoiceViewer.ui
+    VoiceViewer.ui \
+    VoiceOutputViewer.ui
 SOURCES += main.cpp \
     SnesApu.cpp \
     MainWindow.cpp \
     RamViewer.cpp \
-    VoiceViewer.cpp
+    VoiceViewer.cpp \
+    VoiceOutputViewer.cpp
 HEADERS += snes_apu_c.h \
     SnesApu.h \
     MainWindow.h \
     RamViewer.h \
-    VoiceViewer.h
+    VoiceViewer.h \
+    VoiceOutputViewer.h

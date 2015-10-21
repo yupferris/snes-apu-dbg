@@ -3,26 +3,18 @@
 
 #include <qevent.h>
 #include <qpainter.h>
-#include <qtimer.h>
 
-RamViewer::RamViewer(SnesApu *apu, QWidget *parent) :
+RamViewer::RamViewer(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::RamViewer)
 {
     ui->setupUi(this);
 
-    this->apu = apu;
-
     pixels = new QRgb[256 * 256];
     for (int i = 0; i < 256 * 256; i++)
         pixels[i] = 0;
 
-    auto updateTimer = new QTimer(this);
-    connect(updateTimer, &QTimer::timeout, [=] ()
-    {
-        update();
-    });
-    updateTimer->start(20);
+    snapshot = nullptr;
 }
 
 RamViewer::~RamViewer()
@@ -30,14 +22,27 @@ RamViewer::~RamViewer()
     delete ui;
 
     delete [] pixels;
+
+    if (snapshot)
+        delete snapshot;
+}
+
+void RamViewer::Update(Snapshot snapshot)
+{
+    if (this->snapshot)
+        delete this->snapshot;
+    this->snapshot = new Snapshot(snapshot);
+    update();
 }
 
 void RamViewer::paintEvent(QPaintEvent *event)
 {
+    if (!snapshot)
+        return;
+
     QPainter painter(this);
 
-    auto snapshot = apu->GetSnapshot();
-    auto ram = snapshot.GetRam();
+    auto ram = snapshot->GetRam();
 
     for (int y = 0; y < 256; y++)
     {

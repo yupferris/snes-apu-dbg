@@ -12,7 +12,7 @@ MainWindow::MainWindow(SnesApu *apu, QWidget *parent) :
 
     this->apu = apu;
 
-    ramViewer = new RamViewer(apu, ui->ramViewerContainer);
+    ramViewer = new RamViewer(ui->ramViewerContainer);
 
     voiceViewers = new VoiceViewer*[8];
     voiceViewers[0] = new VoiceViewer(apu, 0, ui->voiceViewer0Container);
@@ -26,7 +26,14 @@ MainWindow::MainWindow(SnesApu *apu, QWidget *parent) :
 
     ui->fileOpenSpcFile->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_O));
 
-    Reset();
+    Update(apu->GetSnapshot());
+
+    auto updateTimer = new QTimer(this);
+    connect(updateTimer, &QTimer::timeout, [=] ()
+    {
+        Update(apu->GetSnapshot());
+    });
+    updateTimer->start(20);
 }
 
 MainWindow::~MainWindow()
@@ -36,11 +43,12 @@ MainWindow::~MainWindow()
     delete [] voiceViewers;
 }
 
-void MainWindow::Reset()
+void MainWindow::Update(Snapshot snapshot)
 {
+    ramViewer->Update(snapshot);
     for (int i = 0; i < 8; i++)
     {
-        voiceViewers[i]->Reset();
+        voiceViewers[i]->Update(snapshot);
     }
 }
 
@@ -50,11 +58,9 @@ void MainWindow::on_fileOpenSpcFile_triggered(bool checked)
     if (!filename.size())
         return;
     apu->SetSong(filename.c_str());
-    Reset();
 }
 
 void MainWindow::on_stopButton_clicked()
 {
     apu->SetSong(nullptr);
-    Reset();
 }
