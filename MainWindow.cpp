@@ -60,7 +60,12 @@ void MainWindow::on_fileOpenSpcFile_triggered(bool checked)
     apu->SetSong(filename.c_str());
 }
 
+void MainWindow::on_resetButton_clicked()
+{
+    apu->Reset();
+}
+
 void MainWindow::on_stopButton_clicked()
 {
-    apu->SetSong(nullptr);
+    apu->Stop();
 }

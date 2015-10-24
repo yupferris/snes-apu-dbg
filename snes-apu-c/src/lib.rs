@@ -22,6 +22,16 @@ struct ContextState {
     spc: Option<Spc>
 }
 
+impl ContextState {
+    fn reset(&mut self) {
+        self.apu.reset();
+        if let Some(ref spc) = self.spc {
+            self.apu.set_state(&spc);
+            self.apu.clear_echo_buffer();
+        }
+    }
+}
+
 struct Context {
     state: Arc<Mutex<ContextState>>,
     _driver: CoreAudioDriver
@@ -52,6 +62,16 @@ impl Context {
             state: state,
             _driver: driver
         }
+    }
+
+    fn reset(&mut self) {
+        let state = &mut self.state.lock().unwrap();
+        state.reset();
+    }
+
+    fn stop(&mut self) {
+        let state = &mut self.state.lock().unwrap();
+        state.apu.reset();
     }
 
     fn set_song(&mut self, spc: Option<Spc>) {
@@ -128,6 +148,18 @@ pub extern fn create_context() -> *mut c_void {
 #[no_mangle]
 pub unsafe extern fn free_context(context: *mut c_void) {
     Box::from_raw(context as *mut Context);
+}
+
+#[no_mangle]
+pub extern fn reset(context: *mut c_void) {
+    let context = unsafe { &mut *(context as *mut Context) };
+    context.reset();
+}
+
+#[no_mangle]
+pub extern fn stop(context: *mut c_void) {
+    let context = unsafe { &mut *(context as *mut Context) };
+    context.stop();
 }
 
 #[no_mangle]

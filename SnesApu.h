@@ -28,6 +28,8 @@ public:
     SnesApu();
     ~SnesApu();
 
+    void Reset();
+    void Stop();
     void SetSong(const char*);
     void SetVoiceIsMuted(int, bool);
 

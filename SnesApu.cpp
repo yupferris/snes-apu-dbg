@@ -59,6 +59,16 @@ SnesApu::~SnesApu()
     free_context(context);
 }
 
+void SnesApu::Reset()
+{
+    reset(context);
+}
+
+void SnesApu::Stop()
+{
+    stop(context);
+}
+
 void SnesApu::SetSong(const char *filename)
 {
     set_song(context, filename);

@@ -11,6 +11,8 @@ extern "C"
     snes_apu_context_t *create_context();
     void free_context(snes_apu_context_t *);
 
+    void reset(snes_apu_context_t *);
+    void stop(snes_apu_context_t *);
     void set_song(snes_apu_context_t *, const char *);
     void set_voice_is_muted(snes_apu_context_t *, int32_t, int32_t);
 

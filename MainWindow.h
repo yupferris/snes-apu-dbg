@@ -27,6 +27,7 @@ public:
 private slots:
     void on_fileOpenSpcFile_triggered(bool checked = false);
 
+    void on_resetButton_clicked();
     void on_stopButton_clicked();
 
 private:
