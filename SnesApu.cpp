@@ -29,6 +29,16 @@ const unsigned char *Snapshot::GetRam() const
     return get_snapshot_ram(snapshot);
 }
 
+bool Snapshot::GetResamplingModeIsGaussian() const
+{
+    return get_snapshot_resampling_mode_is_gaussian(snapshot) != 0;
+}
+
+bool Snapshot::GetResamplingModeIsLinear() const
+{
+    return get_snapshot_resampling_mode_is_linear(snapshot) != 0;
+}
+
 bool Snapshot::GetVoiceIsMuted(int voiceIndex) const
 {
     return get_snapshot_voice_is_muted(snapshot, voiceIndex) != 0;
@@ -72,6 +82,16 @@ void SnesApu::Stop()
 void SnesApu::SetSong(const char *filename)
 {
     set_song(context, filename);
+}
+
+void SnesApu::SetResamplingModeGaussian()
+{
+    set_resampling_mode_gaussian(context);
+}
+
+void SnesApu::SetResamplingModeLinear()
+{
+    set_resampling_mode_linear(context);
 }
 
 void SnesApu::SetVoiceIsMuted(int voiceIndex, bool value)

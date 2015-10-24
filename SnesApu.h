@@ -13,6 +13,8 @@ public:
     Snapshot& operator =(const Snapshot&);
 
     const unsigned char *GetRam() const;
+    bool GetResamplingModeIsGaussian() const;
+    bool GetResamplingModeIsLinear() const;
     bool GetVoiceIsMuted(int) const;
     const int32_t *GetVoiceRawOutputBuffer(int) const;
     const int32_t *GetVoiceLeftOutputBuffer(int) const;
@@ -31,6 +33,8 @@ public:
     void Reset();
     void Stop();
     void SetSong(const char*);
+    void SetResamplingModeGaussian();
+    void SetResamplingModeLinear();
     void SetVoiceIsMuted(int, bool);
 
     Snapshot GetSnapshot();

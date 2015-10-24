@@ -15,7 +15,7 @@ use emu::core_audio_driver::CoreAudioDriver;
 use spc::spc::{Spc, RAM_LEN};
 use snes_apu::apu::Apu;
 use snes_apu::dsp::dsp::{SAMPLE_RATE, BUFFER_LEN};
-use snes_apu::dsp::voice::VOICE_BUFFER_LEN;
+use snes_apu::dsp::voice::{ResamplingMode, VOICE_BUFFER_LEN};
 
 struct ContextState {
     apu: Box<Apu>,
@@ -84,6 +84,11 @@ impl Context {
         state.spc = spc;
     }
 
+    fn set_resampling_mode(&mut self, resampling_mode: ResamplingMode) {
+        let state = &mut self.state.lock().unwrap();
+        state.apu.dsp.as_mut().unwrap().set_resampling_mode(resampling_mode);
+    }
+
     fn set_voice_is_muted(&mut self, voice_index: i32, value: bool) {
         let state = &mut self.state.lock().unwrap();
         state.apu.dsp.as_mut().unwrap().voices[voice_index as usize].is_muted = value;
@@ -97,6 +102,7 @@ impl Context {
 
 struct Snapshot {
     ram: Box<[u8; RAM_LEN]>,
+    resampling_mode: ResamplingMode,
     voices: Vec<VoiceSnapshot>
 }
 
@@ -108,6 +114,7 @@ impl Snapshot {
         }
         let mut ret = Snapshot {
             ram: ram,
+            resampling_mode: apu.dsp.as_mut().unwrap().resampling_mode(),
             voices: Vec::with_capacity(8)
         };
         for i in 0..8 {
@@ -175,6 +182,18 @@ pub extern fn set_song(context: *mut c_void, filename: *const c_char) {
 }
 
 #[no_mangle]
+pub extern fn set_resampling_mode_gaussian(context: *mut c_void) {
+    let context = unsafe { &mut *(context as *mut Context) };
+    context.set_resampling_mode(ResamplingMode::Gaussian);
+}
+
+#[no_mangle]
+pub extern fn set_resampling_mode_linear(context: *mut c_void) {
+    let context = unsafe { &mut *(context as *mut Context) };
+    context.set_resampling_mode(ResamplingMode::Linear);
+}
+
+#[no_mangle]
 pub extern fn set_voice_is_muted(context: *mut c_void, voice_index: i32, value: i32) {
     let context = unsafe { &mut *(context as *mut Context) };
     context.set_voice_is_muted(voice_index, value != 0);
@@ -203,6 +222,24 @@ pub unsafe extern fn free_snapshot(snapshot: *mut c_void) {
 pub extern fn get_snapshot_ram(snapshot: *mut c_void) -> *const u8 {
     let snapshot = unsafe { &mut *(snapshot as *mut Arc<Snapshot>) };
     &snapshot.ram[0] as *const _
+}
+
+#[no_mangle]
+pub extern fn get_snapshot_resampling_mode_is_gaussian(snapshot: *mut c_void) -> i32 {
+    let snapshot = unsafe { &mut *(snapshot as *mut Arc<Snapshot>) };
+    match snapshot.resampling_mode {
+        ResamplingMode::Gaussian => 1,
+        _ => 0
+    }
+}
+
+#[no_mangle]
+pub extern fn get_snapshot_resampling_mode_is_linear(snapshot: *mut c_void) -> i32 {
+    let snapshot = unsafe { &mut *(snapshot as *mut Arc<Snapshot>) };
+    match snapshot.resampling_mode {
+        ResamplingMode::Linear => 1,
+        _ => 0
+    }
 }
 
 #[no_mangle]

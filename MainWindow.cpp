@@ -50,6 +50,14 @@ void MainWindow::Update(Snapshot snapshot)
     {
         voiceViewers[i]->Update(snapshot);
     }
+
+    auto gaussianChecked = snapshot.GetResamplingModeIsGaussian();
+    if (gaussianChecked != ui->gaussianRadioButton->isChecked())
+        ui->gaussianRadioButton->setChecked(gaussianChecked);
+
+    auto linearChecked = snapshot.GetResamplingModeIsLinear();
+    if (linearChecked != ui->linearRadioButton->isChecked())
+        ui->linearRadioButton->setChecked(linearChecked);
 }
 
 void MainWindow::on_fileOpenSpcFile_triggered(bool checked)
@@ -68,4 +76,16 @@ void MainWindow::on_resetButton_clicked()
 void MainWindow::on_stopButton_clicked()
 {
     apu->Stop();
+}
+
+void MainWindow::on_gaussianRadioButton_toggled(bool checked)
+{
+    if (checked)
+        apu->SetResamplingModeGaussian();
+}
+
+void MainWindow::on_linearRadioButton_toggled(bool checked)
+{
+    if (checked)
+        apu->SetResamplingModeLinear();
 }

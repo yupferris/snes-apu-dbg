@@ -14,6 +14,8 @@ extern "C"
     void reset(snes_apu_context_t *);
     void stop(snes_apu_context_t *);
     void set_song(snes_apu_context_t *, const char *);
+    void set_resampling_mode_gaussian(snes_apu_context_t *);
+    void set_resampling_mode_linear(snes_apu_context_t *);
     void set_voice_is_muted(snes_apu_context_t *, int32_t, int32_t);
 
     snes_apu_snapshot_t *get_snapshot(snes_apu_context_t *);
@@ -21,6 +23,8 @@ extern "C"
     void free_snapshot(snes_apu_snapshot_t *);
 
     const unsigned char *get_snapshot_ram(snes_apu_snapshot_t *);
+    int32_t get_snapshot_resampling_mode_is_gaussian(snes_apu_snapshot_t *);
+    int32_t get_snapshot_resampling_mode_is_linear(snes_apu_snapshot_t *);
     int32_t get_snapshot_voice_is_muted(snes_apu_snapshot_t *, int32_t);
     const int32_t *get_snapshot_voice_raw_output_buffer(snes_apu_snapshot_t *, int32_t);
     const int32_t *get_snapshot_voice_left_output_buffer(snes_apu_snapshot_t *, int32_t);
