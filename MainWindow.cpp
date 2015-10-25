@@ -56,6 +56,13 @@ void MainWindow::Update(Snapshot snapshot)
 
     outputViewer->Update(snapshot);
 
+    auto title = QString("snes-apu-dbg");
+    auto songName = snapshot.GetSongName();
+    if (!songName.isEmpty())
+        title += " - " + songName;
+    if (title != windowTitle())
+        setWindowTitle(title);
+
     auto gaussianChecked = snapshot.GetResamplingModeIsGaussian();
     if (gaussianChecked != ui->gaussianRadioButton->isChecked())
         ui->gaussianRadioButton->setChecked(gaussianChecked);

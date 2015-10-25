@@ -24,6 +24,18 @@ Snapshot& Snapshot::operator =(const Snapshot& rhs)
     return *this;
 }
 
+QString Snapshot::GetSongName() const
+{
+    auto buffer = get_snapshot_song_name(snapshot);
+    auto len = get_buffer_len(buffer);
+    auto ret =
+        len ?
+        QString(QByteArray((const char *)get_buffer_bytes(buffer), get_buffer_len(buffer))) :
+        QString();
+    free_buffer(buffer);
+    return ret;
+}
+
 const int16_t *Snapshot::GetLeftOutputBuffer() const
 {
     return get_snapshot_left_output_buffer(snapshot);
@@ -89,9 +101,10 @@ void SnesApu::Stop()
     stop(context);
 }
 
-void SnesApu::SetSong(const char *filename)
+void SnesApu::SetSong(const QString& filename)
 {
-    set_song(context, filename);
+    auto utf8Bytes = filename.toUtf8();
+    set_song(context, (const uint8_t *)utf8Bytes.constData(), utf8Bytes.length());
 }
 
 void SnesApu::SetResamplingModeGaussian()

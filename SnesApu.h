@@ -1,6 +1,8 @@
 #ifndef __SNES_APU_H__
 #define __SNES_APU_H__
 
+#include <QString>
+
 #include "snes_apu_c.h"
 
 class Snapshot
@@ -12,6 +14,7 @@ public:
 
     Snapshot& operator =(const Snapshot&);
 
+    QString GetSongName() const;
     const int16_t *GetLeftOutputBuffer() const;
     const int16_t *GetRightOutputBuffer() const;
     const unsigned char *GetRam() const;
@@ -34,7 +37,7 @@ public:
 
     void Reset();
     void Stop();
-    void SetSong(const char*);
+    void SetSong(const QString&);
     void SetResamplingModeGaussian();
     void SetResamplingModeLinear();
     void SetVoiceIsMuted(int, bool);

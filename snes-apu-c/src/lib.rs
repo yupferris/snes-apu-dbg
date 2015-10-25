@@ -4,10 +4,10 @@ extern crate emu;
 extern crate spc;
 extern crate snes_apu;
 
+use std::slice;
 use std::sync::{Arc, Mutex};
 
-use std::ffi::CStr;
-use libc::{c_void, c_char};
+use libc::c_void;
 
 use emu::audio_driver::AudioDriver;
 use emu::core_audio_driver::CoreAudioDriver;
@@ -62,14 +62,14 @@ impl OutputBuffer {
 
 struct ContextState {
     apu: Box<Apu>,
-    spc: Option<Spc>,
+    spc: Option<(String, Spc)>,
     output_buffer: Box<OutputBuffer>
 }
 
 impl ContextState {
     fn reset(&mut self) {
         self.apu.reset();
-        if let Some(ref spc) = self.spc {
+        if let Some((_, ref spc)) = self.spc {
             self.apu.set_state(&spc);
             self.apu.clear_echo_buffer();
         }
@@ -127,7 +127,7 @@ impl Context {
         state.apu.reset();
     }
 
-    fn set_song(&mut self, spc: Option<Spc>) {
+    fn set_song(&mut self, spc: Option<(String, Spc)>) {
         let state = &mut self.state.lock().unwrap();
         state.spc = spc;
         state.reset();
@@ -164,6 +164,7 @@ impl Context {
 }
 
 struct Snapshot {
+    song_name: String,
     left_output_buffer: Box<[i16; OUTPUT_BUFFER_LEN]>,
     right_output_buffer: Box<[i16; OUTPUT_BUFFER_LEN]>,
     ram: Box<[u8; RAM_LEN]>,
@@ -185,6 +186,10 @@ impl Snapshot {
             ram[i] = state.apu.read_u8(i as u32);
         }
         let mut ret = Snapshot {
+            song_name: match state.spc {
+                Some((ref filename, _)) => filename.clone(),
+                _ => String::new()
+            },
             left_output_buffer: left_output_buffer,
             right_output_buffer: right_output_buffer,
             ram: ram,
@@ -221,6 +226,36 @@ struct VoiceSnapshot {
     right_output_buffer: Box<[i32; VOICE_BUFFER_LEN]>
 }
 
+fn utf8_to_string(buf: *const u8, len: i32) -> Option<String> {
+    if buf.is_null() {
+        None
+    } else {
+        let vec = unsafe { slice::from_raw_parts(buf, len as usize) }.to_vec();
+        Some(String::from_utf8(vec).unwrap())
+    }
+}
+
+fn string_to_buffer(string: String) -> *mut c_void {
+    Box::into_raw(Box::new(Arc::new(string.into_bytes().into_boxed_slice()))) as *mut _
+}
+
+#[no_mangle]
+pub unsafe extern fn get_buffer_bytes(buffer: *mut c_void) -> *const u8 {
+    let buffer = &mut *(buffer as *mut Arc<Box<[u8]>>);
+    &buffer[0] as *const _
+}
+
+#[no_mangle]
+pub extern fn get_buffer_len(buffer: *mut c_void) -> i32 {
+    let buffer = unsafe { &mut *(buffer as *mut Arc<Box<[u8]>>) };
+    buffer.len() as i32
+}
+
+#[no_mangle]
+pub unsafe extern fn free_buffer(buffer: *mut c_void) {
+    Box::from_raw(buffer as *mut Arc<Box<[u8]>>);
+}
+
 #[no_mangle]
 pub extern fn create_context() -> *mut c_void {
     Box::into_raw(Box::new(Context::new())) as *mut c_void
@@ -244,13 +279,11 @@ pub extern fn stop(context: *mut c_void) {
 }
 
 #[no_mangle]
-pub extern fn set_song(context: *mut c_void, filename: *const c_char) {
+pub extern fn set_song(context: *mut c_void, filename_buf: *const u8, filename_buf_len: i32) {
     let context = unsafe { &mut *(context as *mut Context) };
-    let spc = if filename.is_null() {
-        None
-    } else {
-        let filename = unsafe { CStr::from_ptr(filename) }.to_str().unwrap();
-        Some(Spc::load(filename).unwrap())
+    let spc = match utf8_to_string(filename_buf, filename_buf_len) {
+        Some(filename) => Some((filename.clone(), Spc::load(filename).unwrap())),
+        _ => None
     };
     context.set_song(spc);
 }
@@ -302,6 +335,12 @@ pub extern fn clone_snapshot(snapshot: *mut c_void) -> *mut c_void {
 #[no_mangle]
 pub unsafe extern fn free_snapshot(snapshot: *mut c_void) {
     Box::from_raw(snapshot as *mut Arc<Snapshot>);
+}
+
+#[no_mangle]
+pub extern fn get_snapshot_song_name(snapshot: *mut c_void) -> *mut c_void {
+    let snapshot = unsafe { &mut *(snapshot as *mut Arc<Snapshot>) };
+    string_to_buffer(snapshot.song_name.clone())
 }
 
 #[no_mangle]
