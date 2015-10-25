@@ -109,6 +109,11 @@ void SnesApu::SetVoiceIsMuted(int voiceIndex, bool value)
     set_voice_is_muted(context, voiceIndex, value ? 1 : 0);
 }
 
+void SnesApu::MuteAll()
+{
+    mute_all(context);
+}
+
 void SnesApu::ClearMutes()
 {
     clear_mutes(context);

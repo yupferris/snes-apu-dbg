@@ -38,6 +38,7 @@ public:
     void SetResamplingModeGaussian();
     void SetResamplingModeLinear();
     void SetVoiceIsMuted(int, bool);
+    void MuteAll();
     void ClearMutes();
 
     Snapshot GetSnapshot();
