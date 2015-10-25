@@ -94,3 +94,8 @@ void MainWindow::on_linearRadioButton_toggled(bool checked)
     if (checked)
         apu->SetResamplingModeLinear();
 }
+
+void MainWindow::on_clearMutesButton_clicked()
+{
+    apu->ClearMutes();
+}

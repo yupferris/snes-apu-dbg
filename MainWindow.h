@@ -34,6 +34,8 @@ private slots:
     void on_gaussianRadioButton_toggled(bool checked);
     void on_linearRadioButton_toggled(bool checked);
 
+    void on_clearMutesButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 

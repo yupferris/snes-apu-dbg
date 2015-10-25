@@ -17,6 +17,7 @@ extern "C"
     void set_resampling_mode_gaussian(snes_apu_context_t *);
     void set_resampling_mode_linear(snes_apu_context_t *);
     void set_voice_is_muted(snes_apu_context_t *, int32_t, int32_t);
+    void clear_mutes(snes_apu_context_t *);
 
     snes_apu_snapshot_t *get_snapshot(snes_apu_context_t *);
     snes_apu_snapshot_t *clone_snapshot(snes_apu_snapshot_t *);

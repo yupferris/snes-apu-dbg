@@ -143,6 +143,13 @@ impl Context {
         state.apu.dsp.as_mut().unwrap().voices[voice_index as usize].is_muted = value;
     }
 
+    fn clear_mutes(&mut self) {
+        let state = &mut self.state.lock().unwrap();
+        for voice in state.apu.dsp.as_mut().unwrap().voices.iter_mut() {
+            voice.is_muted = false;
+        }
+    }
+
     fn get_snapshot(&mut self) -> Snapshot {
         let state = &mut self.state.lock().unwrap();
         Snapshot::new(state)
@@ -257,6 +264,12 @@ pub extern fn set_resampling_mode_linear(context: *mut c_void) {
 pub extern fn set_voice_is_muted(context: *mut c_void, voice_index: i32, value: i32) {
     let context = unsafe { &mut *(context as *mut Context) };
     context.set_voice_is_muted(voice_index, value != 0);
+}
+
+#[no_mangle]
+pub extern fn clear_mutes(context: *mut c_void) {
+    let context = unsafe { &mut *(context as *mut Context) };
+    context.clear_mutes();
 }
 
 #[no_mangle]
