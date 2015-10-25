@@ -38,3 +38,5 @@ HEADERS += snes_apu_c.h \
     VoiceViewer.h \
     VoiceOutputViewer.h \
     OutputViewer.h
+RESOURCES += \
+    resources/application.qrc

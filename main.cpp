@@ -1,6 +1,8 @@
+#include <QApplication>
+#include <QFile>
+
 #include "MainWindow.h"
 #include "SnesApu.h"
-#include <QApplication>
 
 int main(int argc, char *argv[])
 {
@@ -9,6 +11,10 @@ int main(int argc, char *argv[])
     SnesApu apu;
     if (argc > 1)
         apu.SetSong(argv[1]);
+
+    QFile stylesheetFile(":/style.qss");
+    stylesheetFile.open(QFile::ReadOnly);
+    a.setStyleSheet(QLatin1String(stylesheetFile.readAll()));
 
     MainWindow w(&apu);
     w.show();
