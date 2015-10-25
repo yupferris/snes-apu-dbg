@@ -188,6 +188,61 @@
      </property>
     </widget>
    </widget>
+   <widget class="QGroupBox" name="groupBox_3">
+    <property name="geometry">
+     <rect>
+      <x>680</x>
+      <y>330</y>
+      <width>141</width>
+      <height>191</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Mute/Solo</string>
+    </property>
+    <widget class="QPushButton" name="clearMutesButton">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>30</y>
+       <width>141</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Clear Mutes</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="clearSolosButton">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>60</y>
+       <width>141</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Clear Solos</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="outputViewerContainer" native="true">
+    <property name="geometry">
+     <rect>
+      <x>829</x>
+      <y>329</y>
+      <width>291</width>
+      <height>191</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
