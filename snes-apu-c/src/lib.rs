@@ -17,9 +17,53 @@ use snes_apu::apu::Apu;
 use snes_apu::dsp::dsp::{SAMPLE_RATE, BUFFER_LEN};
 use snes_apu::dsp::voice::{ResamplingMode, VOICE_BUFFER_LEN};
 
+const OUTPUT_BUFFER_LEN: usize = 290;
+
+#[derive(Clone, Copy)]
+struct Output {
+    left: i16,
+    right: i16
+}
+
+impl Output {
+    fn default() -> Output {
+        Output {
+            left: 0,
+            right: 0
+        }
+    }
+}
+
+struct OutputBuffer {
+    buffer: Box<[Output; OUTPUT_BUFFER_LEN]>,
+    pos: i32
+}
+
+impl OutputBuffer {
+    fn new() -> OutputBuffer {
+        OutputBuffer {
+            buffer: Box::new([Output::default(); OUTPUT_BUFFER_LEN]),
+            pos: 0
+        }
+    }
+
+    fn reset(&mut self) {
+        for i in 0..OUTPUT_BUFFER_LEN {
+            self.buffer[i] = Output::default();
+        }
+        self.pos = 0;
+    }
+
+    fn write(&mut self, value: Output) {
+        self.buffer[self.pos as usize] = value;
+        self.pos = (self.pos + 1) % (OUTPUT_BUFFER_LEN as i32);
+    }
+}
+
 struct ContextState {
     apu: Box<Apu>,
-    spc: Option<Spc>
+    spc: Option<Spc>,
+    output_buffer: Box<OutputBuffer>
 }
 
 impl ContextState {
@@ -29,6 +73,7 @@ impl ContextState {
             self.apu.set_state(&spc);
             self.apu.clear_echo_buffer();
         }
+        self.output_buffer.reset();
     }
 }
 
@@ -41,7 +86,8 @@ impl Context {
     fn new() -> Context {
         let state = Arc::new(Mutex::new(ContextState {
             apu: Apu::new(),
-            spc: None
+            spc: None,
+            output_buffer: Box::new(OutputBuffer::new())
         }));
 
         let mut driver = CoreAudioDriver::new();
@@ -50,11 +96,18 @@ impl Context {
         let mut left = [0; BUFFER_LEN];
         let mut right = [0; BUFFER_LEN];
         driver.set_render_callback(Some(Box::new(move |buffer, num_frames| {
-            render_callback_state.lock().unwrap().apu.render(&mut left, &mut right, num_frames as i32);
+            let state = &mut render_callback_state.lock().unwrap();
+            state.apu.render(&mut left, &mut right, num_frames as i32);
             for i in 0..num_frames {
                 let j = i * 2;
-                buffer[j + 0] = left[i] as f32 / 32768.0;
-                buffer[j + 1] = right[i] as f32 / 32768.0;
+                let output_left = left[i];
+                let output_right = right[i];
+                buffer[j + 0] = output_left as f32 / 32768.0;
+                buffer[j + 1] = output_right as f32 / 32768.0;
+                state.output_buffer.write(Output {
+                    left: output_left,
+                    right: output_right
+                });
             }
         })));
 
@@ -76,12 +129,8 @@ impl Context {
 
     fn set_song(&mut self, spc: Option<Spc>) {
         let state = &mut self.state.lock().unwrap();
-        state.apu.reset();
-        if let Some(ref spc) = spc {
-            state.apu.set_state(&spc);
-            state.apu.clear_echo_buffer();
-        }
         state.spc = spc;
+        state.reset();
     }
 
     fn set_resampling_mode(&mut self, resampling_mode: ResamplingMode) {
@@ -96,29 +145,40 @@ impl Context {
 
     fn get_snapshot(&mut self) -> Snapshot {
         let state = &mut self.state.lock().unwrap();
-        Snapshot::new(&mut state.apu)
+        Snapshot::new(state)
     }
 }
 
 struct Snapshot {
+    left_output_buffer: Box<[i16; OUTPUT_BUFFER_LEN]>,
+    right_output_buffer: Box<[i16; OUTPUT_BUFFER_LEN]>,
     ram: Box<[u8; RAM_LEN]>,
     resampling_mode: ResamplingMode,
     voices: Vec<VoiceSnapshot>
 }
 
 impl Snapshot {
-    fn new(apu: &mut Apu) -> Snapshot {
+    fn new(state: &mut ContextState) -> Snapshot {
+        let mut left_output_buffer = Box::new([0; OUTPUT_BUFFER_LEN]);
+        let mut right_output_buffer = Box::new([0; OUTPUT_BUFFER_LEN]);
+        for i in 0..OUTPUT_BUFFER_LEN {
+            let output = state.output_buffer.buffer[((state.output_buffer.pos as usize) + i) % OUTPUT_BUFFER_LEN];
+            left_output_buffer[i] = output.left;
+            right_output_buffer[i] = output.right;
+        }
         let mut ram = Box::new([0; RAM_LEN]);
         for i in 0..RAM_LEN {
-            ram[i] = apu.read_u8(i as u32);
+            ram[i] = state.apu.read_u8(i as u32);
         }
         let mut ret = Snapshot {
+            left_output_buffer: left_output_buffer,
+            right_output_buffer: right_output_buffer,
             ram: ram,
-            resampling_mode: apu.dsp.as_mut().unwrap().resampling_mode(),
+            resampling_mode: state.apu.dsp.as_mut().unwrap().resampling_mode(),
             voices: Vec::with_capacity(8)
         };
         for i in 0..8 {
-            let voice = &mut apu.dsp.as_mut().unwrap().voices[i as usize];
+            let voice = &mut state.apu.dsp.as_mut().unwrap().voices[i as usize];
             let mut voice_snapshot = VoiceSnapshot {
                 is_muted: voice.is_muted,
 
@@ -216,6 +276,18 @@ pub extern fn clone_snapshot(snapshot: *mut c_void) -> *mut c_void {
 #[no_mangle]
 pub unsafe extern fn free_snapshot(snapshot: *mut c_void) {
     Box::from_raw(snapshot as *mut Arc<Snapshot>);
+}
+
+#[no_mangle]
+pub extern fn get_snapshot_left_output_buffer(snapshot: *mut c_void) -> *const i16 {
+    let snapshot = unsafe { &mut *(snapshot as *mut Arc<Snapshot>) };
+    &snapshot.left_output_buffer[0] as *const _
+}
+
+#[no_mangle]
+pub extern fn get_snapshot_right_output_buffer(snapshot: *mut c_void) -> *const i16 {
+    let snapshot = unsafe { &mut *(snapshot as *mut Arc<Snapshot>) };
+    &snapshot.right_output_buffer[0] as *const _
 }
 
 #[no_mangle]

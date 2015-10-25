@@ -12,6 +12,8 @@ public:
 
     Snapshot& operator =(const Snapshot&);
 
+    const int16_t *GetLeftOutputBuffer() const;
+    const int16_t *GetRightOutputBuffer() const;
     const unsigned char *GetRam() const;
     bool GetResamplingModeIsGaussian() const;
     bool GetResamplingModeIsLinear() const;

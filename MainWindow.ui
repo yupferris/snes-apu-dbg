@@ -236,10 +236,10 @@
    <widget class="QWidget" name="outputViewerContainer" native="true">
     <property name="geometry">
      <rect>
-      <x>829</x>
-      <y>329</y>
-      <width>291</width>
-      <height>191</height>
+      <x>830</x>
+      <y>330</y>
+      <width>290</width>
+      <height>190</height>
      </rect>
     </property>
    </widget>

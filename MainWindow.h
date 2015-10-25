@@ -9,6 +9,7 @@
 
 #include "RamViewer.h"
 #include "VoiceViewer.h"
+#include "OutputViewer.h"
 
 namespace Ui {
     class MainWindow;
@@ -40,6 +41,7 @@ private:
 
     RamViewer *ramViewer;
     VoiceViewer **voiceViewers;
+    OutputViewer *outputViewer;
 };
 
 #endif

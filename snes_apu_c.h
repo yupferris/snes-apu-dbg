@@ -22,6 +22,8 @@ extern "C"
     snes_apu_snapshot_t *clone_snapshot(snes_apu_snapshot_t *);
     void free_snapshot(snes_apu_snapshot_t *);
 
+    const int16_t *get_snapshot_left_output_buffer(snes_apu_snapshot_t *);
+    const int16_t *get_snapshot_right_output_buffer(snes_apu_snapshot_t *);
     const unsigned char *get_snapshot_ram(snes_apu_snapshot_t *);
     int32_t get_snapshot_resampling_mode_is_gaussian(snes_apu_snapshot_t *);
     int32_t get_snapshot_resampling_mode_is_linear(snes_apu_snapshot_t *);

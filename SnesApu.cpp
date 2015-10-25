@@ -24,6 +24,16 @@ Snapshot& Snapshot::operator =(const Snapshot& rhs)
     return *this;
 }
 
+const int16_t *Snapshot::GetLeftOutputBuffer() const
+{
+    return get_snapshot_left_output_buffer(snapshot);
+}
+
+const int16_t *Snapshot::GetRightOutputBuffer() const
+{
+    return get_snapshot_right_output_buffer(snapshot);
+}
+
 const unsigned char *Snapshot::GetRam() const
 {
     return get_snapshot_ram(snapshot);

@@ -24,6 +24,8 @@ MainWindow::MainWindow(SnesApu *apu, QWidget *parent) :
     voiceViewers[6] = new VoiceViewer(apu, 6, ui->voiceViewer6Container);
     voiceViewers[7] = new VoiceViewer(apu, 7, ui->voiceViewer7Container);
 
+    outputViewer = new OutputViewer(ui->outputViewerContainer);
+
     ui->fileOpenSpcFile->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_O));
 
     Update(apu->GetSnapshot());
@@ -46,10 +48,13 @@ MainWindow::~MainWindow()
 void MainWindow::Update(Snapshot snapshot)
 {
     ramViewer->Update(snapshot);
+
     for (int i = 0; i < 8; i++)
     {
         voiceViewers[i]->Update(snapshot);
     }
+
+    outputViewer->Update(snapshot);
 
     auto gaussianChecked = snapshot.GetResamplingModeIsGaussian();
     if (gaussianChecked != ui->gaussianRadioButton->isChecked())
@@ -57,7 +62,7 @@ void MainWindow::Update(Snapshot snapshot)
 
     auto linearChecked = snapshot.GetResamplingModeIsLinear();
     if (linearChecked != ui->linearRadioButton->isChecked())
-        ui->linearRadioButton->setChecked(linearChecked);
+    ui->linearRadioButton->setChecked(linearChecked);
 }
 
 void MainWindow::on_fileOpenSpcFile_triggered(bool checked)
