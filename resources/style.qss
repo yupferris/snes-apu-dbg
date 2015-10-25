@@ -1,4 +1,45 @@
 QWidget {
     color: #ffffff;
-    background-color: #0a0a0a;
+    background-color: #101010;
+    font-size: 10;
+}
+
+QPushButton {
+    margin: 4px;
+    border: 1px;
+    border-color: #ffffff
+}
+
+QPushButton:hover {
+    background-color: #3a3a3a;
+    color: #00c6ff;
+}
+
+QPushButton:pressed {
+    background-color: #c6076c;
+    color: #000000;
+}
+
+QPushButton:disabled {
+    color: #505050;
+}
+
+QCheckBox {
+    background: transparent;
+}
+
+QCheckBox:disabled {
+    color: #505050;
+}
+
+QRadioButton {
+    background: transparent;
+}
+
+QGroupBox {
+    background-color: #202020;
+}
+
+QGroupBox::title {
+    color: #f0f0f0;
 }
