@@ -13,60 +13,57 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QLabel" name="title">
+  <widget class="QGroupBox" name="groupBox">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>9</y>
-     <width>121</width>
-     <height>21</height>
+     <x>0</x>
+     <y>0</y>
+     <width>141</width>
+     <height>151</height>
     </rect>
    </property>
-   <property name="text">
+   <property name="title">
     <string>Voice 0</string>
    </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="muted">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>30</y>
-     <width>61</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Mute</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="solo">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>50</y>
-     <width>61</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Solo</string>
-   </property>
-  </widget>
-  <widget class="QWidget" name="outputViewerContainer" native="true">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>80</y>
-     <width>120</width>
-     <height>60</height>
-    </rect>
-   </property>
+   <widget class="QWidget" name="outputViewerContainer" native="true">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>80</y>
+      <width>120</width>
+      <height>60</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="muted">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>61</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Mute</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="solo">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>50</y>
+      <width>61</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Solo</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

@@ -10,7 +10,7 @@ VoiceViewer::VoiceViewer(SnesApu *apu, int voiceIndex, QWidget *parent) :
     this->apu = apu;
 
     this->voiceIndex = voiceIndex;
-    ui->title->setText("Voice " + QString::number(voiceIndex));
+    ui->groupBox->setTitle("Voice " + QString::number(voiceIndex));
 
     voiceOutputViewer = new VoiceOutputViewer(voiceIndex, ui->outputViewerContainer);
 }
