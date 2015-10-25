@@ -218,7 +218,7 @@
     </widget>
     <widget class="QPushButton" name="clearSolosButton">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="geometry">
       <rect>

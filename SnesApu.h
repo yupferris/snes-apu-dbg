@@ -21,6 +21,7 @@ public:
     bool GetResamplingModeIsGaussian() const;
     bool GetResamplingModeIsLinear() const;
     bool GetVoiceIsMuted(int) const;
+    bool GetVoiceIsSolod(int) const;
     const int32_t *GetVoiceRawOutputBuffer(int) const;
     const int32_t *GetVoiceLeftOutputBuffer(int) const;
     const int32_t *GetVoiceRightOutputBuffer(int) const;
@@ -41,8 +42,10 @@ public:
     void SetResamplingModeGaussian();
     void SetResamplingModeLinear();
     void SetVoiceIsMuted(int, bool);
+    void SetVoiceIsSolod(int, bool);
     void MuteAll();
     void ClearMutes();
+    void ClearSolos();
 
     Snapshot GetSnapshot();
 

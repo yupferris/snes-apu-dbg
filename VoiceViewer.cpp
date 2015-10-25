@@ -22,9 +22,13 @@ VoiceViewer::~VoiceViewer()
 
 void VoiceViewer::Update(Snapshot snapshot)
 {
-    auto checkState = snapshot.GetVoiceIsMuted(voiceIndex) ? Qt::Checked : Qt::Unchecked;
-    if (checkState != ui->muted->checkState())
-        ui->muted->setCheckState(checkState);
+    auto mutedCheckState = snapshot.GetVoiceIsMuted(voiceIndex) ? Qt::Checked : Qt::Unchecked;
+    if (mutedCheckState != ui->muted->checkState())
+        ui->muted->setCheckState(mutedCheckState);
+
+    auto solodCheckState = snapshot.GetVoiceIsSolod(voiceIndex) ? Qt::Checked : Qt::Unchecked;
+    if (solodCheckState != ui->solod->checkState())
+        ui->solod->setCheckState(solodCheckState);
 
     voiceOutputViewer->Update(snapshot);
 }
@@ -33,4 +37,10 @@ void VoiceViewer::on_muted_stateChanged(int state)
 {
     bool is_checked = state == Qt::Checked;
     apu->SetVoiceIsMuted(voiceIndex, is_checked);
+}
+
+void VoiceViewer::on_solod_stateChanged(int state)
+{
+    bool is_checked = state == Qt::Checked;
+    apu->SetVoiceIsSolod(voiceIndex, is_checked);
 }

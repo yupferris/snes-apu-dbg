@@ -22,8 +22,10 @@ extern "C"
     void set_resampling_mode_gaussian(snes_apu_context_t *);
     void set_resampling_mode_linear(snes_apu_context_t *);
     void set_voice_is_muted(snes_apu_context_t *, int32_t, int32_t);
+    void set_voice_is_solod(snes_apu_context_t *, int32_t, int32_t);
     void mute_all(snes_apu_context_t *);
     void clear_mutes(snes_apu_context_t *);
+    void clear_solos(snes_apu_context_t *);
 
     snes_apu_snapshot_t *get_snapshot(snes_apu_context_t *);
     snes_apu_snapshot_t *clone_snapshot(snes_apu_snapshot_t *);
@@ -36,6 +38,7 @@ extern "C"
     int32_t get_snapshot_resampling_mode_is_gaussian(snes_apu_snapshot_t *);
     int32_t get_snapshot_resampling_mode_is_linear(snes_apu_snapshot_t *);
     int32_t get_snapshot_voice_is_muted(snes_apu_snapshot_t *, int32_t);
+    int32_t get_snapshot_voice_is_solod(snes_apu_snapshot_t *, int32_t);
     const int32_t *get_snapshot_voice_raw_output_buffer(snes_apu_snapshot_t *, int32_t);
     const int32_t *get_snapshot_voice_left_output_buffer(snes_apu_snapshot_t *, int32_t);
     const int32_t *get_snapshot_voice_right_output_buffer(snes_apu_snapshot_t *, int32_t);

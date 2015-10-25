@@ -66,6 +66,11 @@ bool Snapshot::GetVoiceIsMuted(int voiceIndex) const
     return get_snapshot_voice_is_muted(snapshot, voiceIndex) != 0;
 }
 
+bool Snapshot::GetVoiceIsSolod(int voiceIndex) const
+{
+    return get_snapshot_voice_is_solod(snapshot, voiceIndex) != 0;
+}
+
 const int32_t *Snapshot::GetVoiceRawOutputBuffer(int voiceIndex) const
 {
     return get_snapshot_voice_raw_output_buffer(snapshot, voiceIndex);
@@ -122,6 +127,11 @@ void SnesApu::SetVoiceIsMuted(int voiceIndex, bool value)
     set_voice_is_muted(context, voiceIndex, value ? 1 : 0);
 }
 
+void SnesApu::SetVoiceIsSolod(int voiceIndex, bool value)
+{
+    set_voice_is_solod(context, voiceIndex, value ? 1 : 0);
+}
+
 void SnesApu::MuteAll()
 {
     mute_all(context);
@@ -130,6 +140,11 @@ void SnesApu::MuteAll()
 void SnesApu::ClearMutes()
 {
     clear_mutes(context);
+}
+
+void SnesApu::ClearSolos()
+{
+    clear_solos(context);
 }
 
 Snapshot SnesApu::GetSnapshot()

@@ -111,3 +111,8 @@ void MainWindow::on_clearMutesButton_clicked()
 {
     apu->ClearMutes();
 }
+
+void MainWindow::on_clearSolosButton_clicked()
+{
+    apu->ClearSolos();
+}

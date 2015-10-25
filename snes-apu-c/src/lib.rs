@@ -143,6 +143,11 @@ impl Context {
         state.apu.dsp.as_mut().unwrap().voices[voice_index as usize].is_muted = value;
     }
 
+    fn set_voice_is_solod(&mut self, voice_index: i32, value: bool) {
+        let state = &mut self.state.lock().unwrap();
+        state.apu.dsp.as_mut().unwrap().voices[voice_index as usize].is_solod = value;
+    }
+
     fn mute_all(&mut self) {
         let state = &mut self.state.lock().unwrap();
         for voice in state.apu.dsp.as_mut().unwrap().voices.iter_mut() {
@@ -154,6 +159,13 @@ impl Context {
         let state = &mut self.state.lock().unwrap();
         for voice in state.apu.dsp.as_mut().unwrap().voices.iter_mut() {
             voice.is_muted = false;
+        }
+    }
+
+    fn clear_solos(&mut self) {
+        let state = &mut self.state.lock().unwrap();
+        for voice in state.apu.dsp.as_mut().unwrap().voices.iter_mut() {
+            voice.is_solod = false;
         }
     }
 
@@ -200,6 +212,7 @@ impl Snapshot {
             let voice = &mut state.apu.dsp.as_mut().unwrap().voices[i as usize];
             let mut voice_snapshot = VoiceSnapshot {
                 is_muted: voice.is_muted,
+                is_solod: voice.is_solod,
 
                 raw_output_buffer: Box::new([0; VOICE_BUFFER_LEN]),
                 left_output_buffer: Box::new([0; VOICE_BUFFER_LEN]),
@@ -220,6 +233,7 @@ impl Snapshot {
 
 struct VoiceSnapshot {
     is_muted: bool,
+    is_solod: bool,
 
     raw_output_buffer: Box<[i32; VOICE_BUFFER_LEN]>,
     left_output_buffer: Box<[i32; VOICE_BUFFER_LEN]>,
@@ -307,6 +321,12 @@ pub extern fn set_voice_is_muted(context: *mut c_void, voice_index: i32, value: 
 }
 
 #[no_mangle]
+pub extern fn set_voice_is_solod(context: *mut c_void, voice_index: i32, value: i32) {
+    let context = unsafe { &mut *(context as *mut Context) };
+    context.set_voice_is_solod(voice_index, value != 0);
+}
+
+#[no_mangle]
 pub extern fn mute_all(context: *mut c_void) {
     let context = unsafe { &mut *(context as *mut Context) };
     context.mute_all();
@@ -316,6 +336,12 @@ pub extern fn mute_all(context: *mut c_void) {
 pub extern fn clear_mutes(context: *mut c_void) {
     let context = unsafe { &mut *(context as *mut Context) };
     context.clear_mutes();
+}
+
+#[no_mangle]
+pub extern fn clear_solos(context: *mut c_void) {
+    let context = unsafe { &mut *(context as *mut Context) };
+    context.clear_solos();
 }
 
 #[no_mangle]
@@ -383,6 +409,12 @@ pub extern fn get_snapshot_resampling_mode_is_linear(snapshot: *mut c_void) -> i
 pub extern fn get_snapshot_voice_is_muted(snapshot: *mut c_void, voice_index: i32) -> i32 {
     let snapshot = unsafe { &mut *(snapshot as *mut Arc<Snapshot>) };
     if snapshot.voices[voice_index as usize].is_muted { 1 } else { 0 }
+}
+
+#[no_mangle]
+pub extern fn get_snapshot_voice_is_solod(snapshot: *mut c_void, voice_index: i32) -> i32 {
+    let snapshot = unsafe { &mut *(snapshot as *mut Arc<Snapshot>) };
+    if snapshot.voices[voice_index as usize].is_solod { 1 } else { 0 }
 }
 
 #[no_mangle]

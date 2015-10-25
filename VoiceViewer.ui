@@ -48,9 +48,9 @@
      <string>Mute</string>
     </property>
    </widget>
-   <widget class="QCheckBox" name="solo">
+   <widget class="QCheckBox" name="solod">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>

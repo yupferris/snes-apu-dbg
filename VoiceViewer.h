@@ -22,6 +22,7 @@ public:
 
 private slots:
     void on_muted_stateChanged(int state);
+    void on_solod_stateChanged(int state);
 
 private:
     Ui::VoiceViewer *ui;

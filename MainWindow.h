@@ -36,6 +36,7 @@ private slots:
 
     void on_muteAllButton_clicked();
     void on_clearMutesButton_clicked();
+    void on_clearSolosButton_clicked();
 
 private:
     Ui::MainWindow *ui;
