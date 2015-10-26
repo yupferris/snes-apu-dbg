@@ -11,6 +11,4 @@ crate-type = ["staticlib"]
 libc = "0.1.10"
 spc = "0.1.1"
 emu = "0.1.1"
-
-[dependencies.snes-apu]
-path = "../../snes-apu"
+snes-apu = "0.1.10"

@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include "SnesApu.h"
+#include "../domain-model/SnesApu.h"
 #include "VoiceOutputViewer.h"
 
 namespace Ui {

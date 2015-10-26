@@ -29,7 +29,7 @@ void OutputViewer::Update(Snapshot snapshot)
     update();
 }
 
-void OutputViewer::paintEvent(QPaintEvent *event)
+void OutputViewer::paintEvent(QPaintEvent *)
 {
     if (!snapshot)
         return;

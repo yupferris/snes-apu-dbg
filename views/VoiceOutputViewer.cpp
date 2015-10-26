@@ -31,7 +31,7 @@ void VoiceOutputViewer::Update(Snapshot snapshot)
     update();
 }
 
-void VoiceOutputViewer::paintEvent(QPaintEvent *event)
+void VoiceOutputViewer::paintEvent(QPaintEvent *)
 {
     if (!snapshot)
         return;

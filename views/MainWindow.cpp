@@ -72,7 +72,7 @@ void MainWindow::Update(Snapshot snapshot)
     ui->linearRadioButton->setChecked(linearChecked);
 }
 
-void MainWindow::on_fileOpenSpcFile_triggered(bool checked)
+void MainWindow::on_fileOpenSpcFile_triggered(bool)
 {
     auto filename = QFileDialog::getOpenFileName(this, "Open SPC File", "", "SPC File (*.spc);;All Files (*)").toStdString();
     if (!filename.size())
