@@ -35,7 +35,7 @@ void RamViewer::Update(Snapshot snapshot)
     update();
 }
 
-void RamViewer::paintEvent(QPaintEvent *event)
+void RamViewer::paintEvent(QPaintEvent *)
 {
     if (!snapshot)
         return;
