@@ -51,9 +51,11 @@ by a `Snapshot` class (see [SnesApu.cpp](https://github.com/yupferris/snes-apu-d
 management of `Snapshot`'s is automatically handled as long as we pass `Snapshot`'s around by value. All this requires is a
 properly-implemented copy constructor and assignment operator, which are trivial in this case.
 
-This pattern of exposing a mutable `Context` and immutable `Snapshot`'s from Rust to C++ seems to be a pretty nice pattern for
-doing UI's, and is one I'll certainly repeat in the future. It's something I've had in my head for awhile, and I'm quite pleased
-with how nice it was to implement using Rust and Qt.
+While this code itself isn't the cleanest in the world (in particular the somewhat-mammoth
+[lib.rs](https://github.com/yupferris/snes-apu-dbg/blob/master/snes-apu-c/src/lib.rs) in
+[snes-apu-c](https://github.com/yupferris/snes-apu-dbg/tree/master/snes-apu-c)), this pattern of exposing a mutable `Context` and
+immutable `Snapshot`'s from Rust to C++ seems to be a pretty nice pattern for doing Qt UI's, and is one I'll certainly repeat in the
+future. It's something I've had in my head for awhile, and I'm quite pleased with how nice it was to implement.
 
 ## License
 This code is licensed under the BSD2 license (see LICENSE).
