@@ -1,10 +1,10 @@
 QT += core gui widgets
 
 rust.depends = FORCE
-rust.target = snes-apu-c/target/release/libsnes_apu_c.a
-rust.commands = cd snes-apu-c && cargo build --release
+rust.target = domain-model/snes-apu-c/target/release/libsnes_apu_c.a
+rust.commands = cd domain-model/snes-apu-c && cargo build --release
 
-PRE_TARGETDEPS += snes-apu-c/target/release/libsnes_apu_c.a
+PRE_TARGETDEPS += domain-model/snes-apu-c/target/release/libsnes_apu_c.a
 QMAKE_EXTRA_TARGETS += rust
 
 TEMPLATE = app
@@ -17,7 +17,7 @@ RCC_DIR = $${DESTDIR}/.rcc
 UI_DIR = $${DESTDIR}/.ui
 
 CONFIG += c++11
-LIBS += -Lsnes-apu-c/target/release -lsnes_apu_c -framework AudioUnit
+LIBS += -Ldomain-model/snes-apu-c/target/release -lsnes_apu_c -framework AudioUnit
 
 FORMS += MainWindow.ui \
     RamViewer.ui \
@@ -25,14 +25,14 @@ FORMS += MainWindow.ui \
     VoiceOutputViewer.ui \
     OutputViewer.ui
 SOURCES += main.cpp \
-    SnesApu.cpp \
+    domain-model/SnesApu.cpp \
     MainWindow.cpp \
     RamViewer.cpp \
     VoiceViewer.cpp \
     VoiceOutputViewer.cpp \
     OutputViewer.cpp
-HEADERS += snes_apu_c.h \
-    SnesApu.h \
+HEADERS += domain-model/snes_apu_c.h \
+    domain-model/SnesApu.h \
     MainWindow.h \
     RamViewer.h \
     VoiceViewer.h \

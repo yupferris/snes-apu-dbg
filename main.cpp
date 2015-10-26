@@ -1,8 +1,8 @@
 #include <QApplication>
 #include <QFile>
 
+#include "domain-model/SnesApu.h"
 #include "MainWindow.h"
-#include "SnesApu.h"
 
 int main(int argc, char *argv[])
 {
