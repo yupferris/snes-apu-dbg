@@ -8,7 +8,7 @@ This is a simple debugging tool that was used to help find emulation bugs in the
 It was also used as a proof-of-concept test for building UI's for [Rust](https://www.rust-lang.org) projects using [Qt](http://www.qt.io).
 
 _Note: Due to current limitations in [the emu project](https://github.com/emu-rs/emu) on which this depends, this
-will only build on osx. Other platforms will be supported promptly._
+will only build on OS X. Other platforms will be supported promptly._
 
 ## Features
 - RAM viewer
