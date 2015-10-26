@@ -19,24 +19,24 @@ UI_DIR = $${DESTDIR}/.ui
 CONFIG += c++11
 LIBS += -Ldomain-model/snes-apu-c/target/release -lsnes_apu_c -framework AudioUnit
 
-FORMS += MainWindow.ui \
-    RamViewer.ui \
-    VoiceViewer.ui \
-    VoiceOutputViewer.ui \
-    OutputViewer.ui
+FORMS += views/MainWindow.ui \
+    views/RamViewer.ui \
+    views/VoiceViewer.ui \
+    views/VoiceOutputViewer.ui \
+    views/OutputViewer.ui
 SOURCES += main.cpp \
     domain-model/SnesApu.cpp \
-    MainWindow.cpp \
-    RamViewer.cpp \
-    VoiceViewer.cpp \
-    VoiceOutputViewer.cpp \
-    OutputViewer.cpp
+    views/MainWindow.cpp \
+    views/RamViewer.cpp \
+    views/VoiceViewer.cpp \
+    views/VoiceOutputViewer.cpp \
+    views/OutputViewer.cpp
 HEADERS += domain-model/snes_apu_c.h \
     domain-model/SnesApu.h \
-    MainWindow.h \
-    RamViewer.h \
-    VoiceViewer.h \
-    VoiceOutputViewer.h \
-    OutputViewer.h
+    views/MainWindow.h \
+    views/RamViewer.h \
+    views/VoiceViewer.h \
+    views/VoiceOutputViewer.h \
+    views/OutputViewer.h
 RESOURCES += \
     resources/application.qrc

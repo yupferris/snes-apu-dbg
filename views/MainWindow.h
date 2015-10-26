@@ -5,7 +5,7 @@
 #include <qlayout.h>
 #include <qtimer.h>
 
-#include "domain-model/SnesApu.h"
+#include "../domain-model/SnesApu.h"
 
 #include "RamViewer.h"
 #include "VoiceViewer.h"

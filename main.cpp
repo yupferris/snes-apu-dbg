@@ -2,7 +2,7 @@
 #include <QFile>
 
 #include "domain-model/SnesApu.h"
-#include "MainWindow.h"
+#include "views/MainWindow.h"
 
 int main(int argc, char *argv[])
 {
