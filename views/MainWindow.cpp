@@ -50,9 +50,7 @@ void MainWindow::Update(Snapshot snapshot)
     ramViewer->Update(snapshot);
 
     for (int i = 0; i < 8; i++)
-    {
         voiceViewers[i]->Update(snapshot);
-    }
 
     outputViewer->Update(snapshot);
 
@@ -74,10 +72,10 @@ void MainWindow::Update(Snapshot snapshot)
 
 void MainWindow::on_fileOpenSpcFile_triggered(bool)
 {
-    auto filename = QFileDialog::getOpenFileName(this, "Open SPC File", "", "SPC File (*.spc);;All Files (*)").toStdString();
-    if (!filename.size())
+    auto filename = QFileDialog::getOpenFileName(this, "Open SPC File", "", "SPC File (*.spc);;All Files (*)");
+    if (!filename.length())
         return;
-    apu->SetSong(filename.c_str());
+    apu->SetSong(filename);
 }
 
 void MainWindow::on_resetButton_clicked()
