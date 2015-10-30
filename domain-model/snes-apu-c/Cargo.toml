@@ -10,5 +10,5 @@ crate-type = ["staticlib"]
 [dependencies]
 libc = "0.1.10"
 spc = "0.1.1"
-emu = "0.1.1"
-snes-apu = "0.1.10"
+emu = "0.1.2"
+snes-apu = "0.1.11"
